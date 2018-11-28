@@ -5,6 +5,7 @@ Working on visualization for rusvectores.org
 ### Current teamlead: 
 
 **Toma**
+
 Nadia
 
 ### RusVectōrēs pull 
