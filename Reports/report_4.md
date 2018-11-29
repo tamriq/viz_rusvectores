@@ -13,5 +13,6 @@
 * пройти тьюториал по работе с Gensim и моделями https://github.com/akutuzov/webvectors/blob/master/preprocessing/rusvectores_tutorial.ipynb
 * начать знакомиться с  уже существующим бэком 
 * более подробно посмотреть возможности d3.js
+* познакомиться с AJAX 
 
 *Первые выводы по опросу ориентировочно в середине декабря*
