@@ -5,5 +5,5 @@
 3. freq.js - скрипт для показа выбранных частотностей
 
 Ссылки на другие разборы:
-* [https://drive.google.com/open?id=18-HSB28ry6_L0t3m0sQkuH2AKuTpq8nIidaRoYS6gqM](word2vec_server.py)
-* [https://drive.google.com/open?id=18_saLVtT5qE19uRDl0lEBu1drQsQx9BOYeuZW-ypdYY](associates.html)
+* [word2vec_server.py](https://drive.google.com/open?id=18-HSB28ry6_L0t3m0sQkuH2AKuTpq8nIidaRoYS6gqM)
+* [associates.html](https://drive.google.com/open?id=18_saLVtT5qE19uRDl0lEBu1drQsQx9BOYeuZW-ypdYY)
