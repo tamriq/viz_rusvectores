@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-10"> <!-- классы задают размещение элемента и ширину колонок -->
         <h2>{{strings['similar1']}}</h2> <!--  заголовок второго уровня -->
-         <div id="queryform"> 
+        <div id="queryform"> 
             <!-- id задаёт уникальное имя элемента, которое используется для изменения его стиля и обращения к нему через скрипты -->
         <!-- form - форма предназначена для обмена данными между пользователем и сервером.-->
         <form id="inputform" action="#" method=post>
@@ -45,7 +45,7 @@
                 {% endfor %}
                 </small>
                 </fieldset>
-              </div>
+            </div>
 
               <!-- Если частеречные теги заданы, надо в запросе указать, результаты с какой частью речи нужны-->
             {% if tags %}
@@ -83,7 +83,7 @@
     {% if list_value %}
         <!-- Заголовок третьего уровня "Cемантические аналоги для ...." , strong - жирным текстом-->
         <h3><strong>{{strings['similar16']}}
-        <!-- href Задает адрес документа, на который следует перейти - на моём компе ошибка, на сайте - https://rusvectores.org/ru/ruwikiruscorpora_upos_skipgram_300_2_2019/%D0%BA%D0%BE%D0%B7%D0%B0_NOUN/ например, т.е. "коза_NOUN"-- >
+        <!-- href Задает адрес документа, на который следует перейти - на моём компе ошибка, на сайте - https://rusvectores.org/ru/ruwikiruscorpora_upos_skipgram_300_2_2019/%D0%BA%D0%BE%D0%B7%D0%B0_NOUN/ например, т.е. "коза_NOUN" -->
             <!-- title - то, что всплывает при наведении курсора (часть речи, частота в корпусе) -->
             <!-- if ...  - слово окрашивается в зависимости от частоты-->
             <!-- <i> устанавливает курсив -->
@@ -94,6 +94,21 @@
             <i>{{ word.split('_')[0].replace('::', ' ') }}</i></a>
         <!-- и часть речи указана в скобках-->
         </strong> ({{ pos }})</h3> 
+
+            <!-- Чекбоксы для выбора частотности-->
+            <div class="checkbox">
+            <p><small><em>{{strings['frequency1']}}</em></small></p>
+            <small>
+                <label style="color: green;">
+            <input id="high" type="checkbox" value="3k" checked>{{ strings['frequency2']}}</label>
+                <label style="color: #337ab7;">
+            <input id="mid" type="checkbox" value="3k" checked>{{ strings['frequency3'] }}</label>
+                <label style="color: red;">
+            <input id="low" type="checkbox" value="3k" checked>{{ strings['frequency4'] }}</label>
+            </small>
+            </div>
+
+
 
         <!-- Выводим список результатов-->
         <div class="row">
@@ -118,12 +133,6 @@
         <!-- Иначе начинаем эти результаты выводить-->
         {% else %}
 
-            <!-- Чекбоксы для выбора частотности-->
-            <p><small><em>{{strings['frequency1']}}</em></small></p> 
-            <input id="high" type="checkbox" value="3k"checked> {{ strings['frequency2'] }}
-            <input id="mid" type="checkbox" value="3k"checked> {{ strings['frequency3'] }}
-            <input id="low" type="checkbox" value="3k"checked> {{ strings['frequency4'] }}
-
             <!-- Тег <ol> устанавливает нумерованный список. Каждый элемент списка должен начинаться с тега <li> -->
             <ol> 
             <!-- Проходим по всем результатам -->
@@ -135,7 +144,7 @@
                 <!-- title - При наведении курсора видим часть речи и чатсоту в корпусе -->
                 <!-- Выделяем цветом в зависимости от частоты -->
                 <a href="{{ url }}{{lang}}/{{ model }}/{{res[0]}}/"
-                title="{{strings['synraw15']}} {{ res[0].split('_')[-1] }}, {{strings['synraw14']}}{{ frequencies[model][res[0]][0]}}"
+                title="{{strings['synraw15']}} {{ res[0].split('_')[-1] }}, {{strings['synraw14']}} {{ frequencies[model][res[0]][0]}}"
                 {% if frequencies[model][res[0]][1] == 'high'%} style="color: green;"
                 {% elif frequencies[model][res[0]][1] == 'low' %} style="color: red;" 
                 {% endif %}>

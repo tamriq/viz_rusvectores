@@ -1,57 +1,35 @@
-$(function(){
-    var checkbox=$( 'input[id=high]' );
-    
-    if( sessionStorage[ 'show' ] == 'ok' ){  $("li.off").show();checkbox[0].checked=true }
-        
-    checkbox.click( function(){
+$(function() {
+    var checkbox = $('input[id=high]');
 
-        if(  this.checked ){ 
-            sessionStorage[ 'show' ]='ok'
+    checkbox.click(function() {
+        if (this.checked) {
             $("li.high").fadeIn('slow');
         } else {
-            sessionStorage[ 'show' ]='no'
             $("li.high").fadeOut('slow');
         }
-    
-})
-    
-    })
+    });
+});
 
-$(function(){
-    var checkbox=$( 'input[id=mid]' );
-    
-    if( sessionStorage[ 'show' ] == 'ok' ){  $("li.mid").show();checkbox[0].checked=true }
-        
-    checkbox.click( function(){
+$(function() {
+    var checkbox = $('input[id=mid]');
 
-        if(  this.checked ){ 
-            sessionStorage[ 'hided' ]='ok'
+    checkbox.click(function() {
+        if (this.checked) {
             $("li.mid").fadeIn('slow');
         } else {
-            sessionStorage[ 'hided' ]='no'
             $("li.mid").fadeOut('slow');
-
         }
-    
-})
-    
-    })
-    
-$(function(){
-    var checkbox=$( 'input[id=low]' );
-    
-    if( sessionStorage[ 'show' ] == 'ok' ){  $("li.mek").show();checkbox[0].checked=true }
-        
-    checkbox.click( function(){
+    });
+});
 
-        if(  this.checked ){ 
-            sessionStorage[ 'show' ]='ok'
+$(function() {
+    var checkbox = $('input[id=low]');
+
+    checkbox.click(function() {
+        if (this.checked) {
             $("li.low").fadeIn('slow');
         } else {
-            sessionStorage[ 'show' ]='no'
             $("li.low").fadeOut('slow');
         }
-    
-})
-    
-    })
+    });
+});
