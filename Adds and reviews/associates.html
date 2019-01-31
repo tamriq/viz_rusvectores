@@ -1,6 +1,6 @@
 {% extends "base.html" %} <!-- Этот шаблон явялется расширением шаблона base.html-->
 
-<!-- Блок заголовка меняет заголовок во вкладке браузера и заголовок окна(?)-->
+<!-- Блок заголовка меняет заголовок во вкладке браузера и заголовок окна -->
 {% block title %}
      <title>{{strings['base3']}}: {{strings['similar1']}}</title>
 {% endblock title %}
@@ -39,7 +39,7 @@
                 <!-- В цикле делаем боксы для моделей из списка -->
                 {% for m in models %}
                     <label>
-                        <!-- атрибут checked определяет, помечен ли заранее элемент из списка моделей пользователя?-->
+                        <!-- атрибут checked определяет, помечен ли заранее элемент из списка моделей пользователя-->
                         <input type="checkbox" {%if m in usermodels %}checked{% endif %} name="model" value="{{ m }}">{{ strings[models[m]] }}
                     </label>
                 {% endfor %}
@@ -54,7 +54,7 @@
                 <!--  радиокнопки для выбора части речи запроса -->
                 <div class="radio">
                 <small>
-                    <!-- в цикле выводим кнопки с тегами для заданных в модели(?) частей речи-->
+                    <!-- в цикле выводим кнопки с тегами для заданных в файле tags.tsv частей речи-->
                      {% for tag in tags2show %} 
                         <label>
                             <input type="radio" name="pos" {% if tag in userpos %}checked{% endif %}  value="{{ tag }}"> {{strings[tags2show[tag]]}}
