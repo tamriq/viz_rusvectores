@@ -144,3 +144,6 @@ frequency1,Частотность,Frequency
 frequency2,Высокая,High
 frequency3,Средняя,Medium
 frequency4,Низкая,Low
+frequency5,Доля в корпусе выше 0.00001,Corpus ratio higher than 0.00001
+frequency6,Доля в корпусе от 0.0000005 до 0.00001,Corpus ratio from 0.0000005 to 0.00001
+frequency7,Доля в корпусе ниже 0.0000005,Corpus ratio less than 0.0000005

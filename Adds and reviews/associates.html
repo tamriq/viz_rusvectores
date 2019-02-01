@@ -57,15 +57,15 @@
                     <!-- в цикле выводим кнопки с тегами для заданных в файле tags.tsv частей речи-->
                      {% for tag in tags2show %} 
                         <label>
-                            <input type="radio" name="pos" {% if tag in userpos %}checked{% endif %}  value="{{ tag }}"> {{strings[tags2show[tag]]}}
+                            <input type="radio" name="pos" {% if tag in userpos %}checked{% endif %} value="{{ tag }}"> {{strings[tags2show[tag]]}}
                         </label>
                     {% endfor %}
                      <!-- и без цикла - кнопки с подписями для всех частей речи и части речи запроса-->
                     <label>
-                        <input type="radio" name="pos" {% if not userpos %} checked {% endif %} value="ALL"> {{strings['similar14']}}
+                        <input type="radio" name="pos" {% if not userpos %}checked{% endif %} value="ALL"> {{strings['similar14']}}
                     </label>
                     <label>
-                        <input type="radio" name="pos" {% if 'Q' in userpos %} checked {% endif %} value="Q"> {{strings['similar19']}} 
+                        <input type="radio" name="pos" {% if 'Q' in userpos %}checked{% endif %} value="Q"> {{strings['similar19']}} 
                     </label>
                 </small>
                 </div>
@@ -99,12 +99,12 @@
             <div class="checkbox">
             <p><small><em>{{strings['frequency1']}}</em></small></p>
             <small>
-                <label style="color: green;">
-            <input id="high" type="checkbox" value="3k" checked>{{ strings['frequency2']}}</label>
-                <label style="color: #337ab7;">
-            <input id="mid" type="checkbox" value="3k" checked>{{ strings['frequency3'] }}</label>
-                <label style="color: red;">
-            <input id="low" type="checkbox" value="3k" checked>{{ strings['frequency4'] }}</label>
+                <label style="color: green;" title="{{strings['frequency5']}}">
+            <input id="high" type="checkbox" checked>{{ strings['frequency2']}}</label>
+                <label style="color: #337ab7;" title="{{strings['frequency6']}}">
+            <input id="mid" type="checkbox" checked>{{ strings['frequency3'] }}</label>
+                <label style="color: red;" title="{{strings['frequency7']}}">
+            <input id="low" type="checkbox">{{ strings['frequency4'] }}</label>
             </small>
             </div>
 
@@ -122,9 +122,10 @@
                 <i>{{strings['similar32']}}</i>
             {% endif %}
         <!-- big увеличивает шрифт-->
-        <big>
+        <!-- <big> -->
 
         <!-- Если не знаем слово, пишем "Модели неизвестно слово word" -->
+        <span style="font-size: larger;">
         {% if list_value[model] == "Unknown!" %}
             {{ strings['similar18'] }} "{{ word }}"
         <!-- Иначе если нет результатов - "Нет подходящих результатов" -->
@@ -132,9 +133,10 @@
             {{strings['similar23']}}
         <!-- Иначе начинаем эти результаты выводить-->
         {% else %}
+        </span>
 
             <!-- Тег <ol> устанавливает нумерованный список. Каждый элемент списка должен начинаться с тега <li> -->
-            <ol> 
+            <ol style="font-size: larger;"> 
             <!-- Проходим по всем результатам -->
             {% for res in list_value[model] if res != "Incorrect tag!" %}
 
@@ -177,7 +179,7 @@
             <!-- Закончили проход по результатам-->
             </ol>
         {% endif %}
-        </big>
+        <!-- </big> -->
         </div>
         <!--  Закончили столбец для результатов одной модели -->
         {% endfor %}
