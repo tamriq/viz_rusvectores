@@ -1,0 +1,216 @@
+{% extends "base.html" %} <!-- Этот шаблон явялется расширением шаблона base.html-->
+
+<!-- Блок заголовка меняет заголовок во вкладке браузера и заголовок окна -->
+{% block title %}
+     <title>{{strings['base3']}}: {{strings['similar1']}}</title>
+{% endblock title %}
+         
+<!-- контент страницы - например, пост в блоге) -->
+{% block content %}
+        <!-- div - блочный элемент, выделяет фрагмент документа с целью изменения вида содержимого. Как правило, вид блока управляется с помощью стилей. Чтобы не описывать каждый раз стиль внутри тега, можно выделить стиль во внешнюю таблицу стилей, а для тега добавить атрибут class или id с именем селектора.-->
+        <div class="row">
+            <div class="col-md-10"> <!-- классы задают размещение элемента и ширину колонок -->
+        <h2>{{strings['similar1']}}</h2> <!--  заголовок второго уровня -->
+        <div id="queryform"> 
+            <!-- id задаёт уникальное имя элемента, которое используется для изменения его стиля и обращения к нему через скрипты -->
+        <!-- form - форма предназначена для обмена данными между пользователем и сервером.-->
+        <form id="inputform" action="#" method=post>
+
+            <!-- Поле для ввода запроса-->
+            <div class="form-group">
+                <!-- Заголовок (Введите слово ....)-->
+                <p>{{strings['similar2']}}</p>
+
+                {% if list_value %}
+                <!-- Если был запрос и слово в нём, то показываем в поле его-->
+                <input type="text" class="typeahead" id="query" name="list_query" value="{{ word }}" maxlength=100>
+                {% else %}
+                <!-- Если ничего не ввели, то по дефолту показывает computer_NOUN (home7) -->
+                <input type="text" class="typeahead" id="query" name="list_query" value="{{strings['home7']}}" maxlength=100>
+                {% endif %}
+
+            </div>
+            
+            <!-- Чекбокс для выбора модели--> 
+            <div class="checkbox">
+                  <p><small><em>{{strings['similar3']}}</em></small></p> <!-- Тег <small> уменьшает размер шрифта на единицу -->
+                <fieldset>
+                <small>
+                <!-- В цикле делаем боксы для моделей из списка -->
+                {% for m in models %}
+                    <label>
+                        <!-- атрибут checked определяет, помечен ли заранее элемент из списка моделей пользователя-->
+                        <input type="checkbox" {%if m in usermodels %}checked{% endif %} name="model" value="{{ m }}">{{ strings[models[m]] }}
+                    </label>
+                {% endfor %}
+                </small>
+                </fieldset>
+            </div>
+
+              <!-- Если частеречные теги заданы, надо в запросе указать, результаты с какой частью речи нужны-->
+            {% if tags %}
+                <p><small><em>{{strings['similar9']}}</em></small></p> <!-- Заголовок "Показывать только". <p> определяет текстовый абзац-->
+
+                <!--  радиокнопки для выбора части речи запроса -->
+                <div class="radio">
+                <small>
+                    <!-- в цикле выводим кнопки с тегами для заданных в файле tags.tsv частей речи-->
+                     {% for tag in tags2show %} 
+                        <label>
+                            <input type="radio" name="pos" {% if tag in userpos %}checked{% endif %} value="{{ tag }}"> {{strings[tags2show[tag]]}}
+                        </label>
+                    {% endfor %}
+                     <!-- и без цикла - кнопки с подписями для всех частей речи и части речи запроса-->
+                    <label>
+                        <input type="radio" name="pos" {% if not userpos %}checked{% endif %} value="ALL"> {{strings['similar14']}}
+                    </label>
+                    <label>
+                        <input type="radio" name="pos" {% if 'Q' in userpos %}checked{% endif %} value="Q"> {{strings['similar19']}} 
+                    </label>
+                </small>
+                </div>
+                <!-- конец радиокнопки-->
+            {% endif %}
+
+                <!-- Кнопка. Можно размещать самостоятельно, но если хотим отправлять данные на сервер, то обязательно в контейнере form -->
+                <button type="submit" class="btn btn-primary" id="send" name="list_query">{{strings['similar15']}}</button>
+            </form>
+            <!-- конец контейнера id="inputform" -->
+            </div>
+            <!-- конец id="queryform" -->
+
+    <!-- Выводим результат -->
+    {% if list_value %}
+        <!-- Заголовок третьего уровня "Cемантические аналоги для ...." , strong - жирным текстом-->
+        <h3><strong>{{strings['similar16']}}
+        <!-- href Задает адрес документа, на который следует перейти - на моём компе ошибка, на сайте - https://rusvectores.org/ru/ruwikiruscorpora_upos_skipgram_300_2_2019/%D0%BA%D0%BE%D0%B7%D0%B0_NOUN/ например, т.е. "коза_NOUN" -->
+            <!-- title - то, что всплывает при наведении курсора (часть речи, частота в корпусе) -->
+            <!-- if ...  - слово окрашивается в зависимости от частоты-->
+            <!-- <i> устанавливает курсив -->
+        <a href="{{ url }}{{lang}}/{{ usermodels[0] }}/{{word}}" 
+            title="{{strings['synraw15']}} {{ word.split('_')[-1] }}, {{strings['synraw14']}} {{ frequencies[usermodels[0]][word][0]}}"
+            {% if frequencies[usermodels[0]][word][1] == 'high'%} style="color: green;"
+            {% elif frequencies[usermodels[0]][word][1] == 'low' %} style="color: red;"{% endif %}>
+            <i>{{ word.split('_')[0].replace('::', ' ') }}</i></a>
+        <!-- и часть речи указана в скобках-->
+        </strong> ({{ pos }})</h3> 
+
+            <!-- Чекбоксы для выбора частотности-->
+            <div class="checkbox">
+            <p><small><em>{{strings['frequency1']}}</em></small></p>
+            <small>
+                <label style="color: green;" title="{{strings['frequency5']}}">
+            <input id="high" type="checkbox" checked>{{ strings['frequency2']}}</label>
+                <label style="color: #337ab7;" title="{{strings['frequency6']}}">
+            <input id="mid" type="checkbox" checked>{{ strings['frequency3'] }}</label>
+                <label style="color: red;" title="{{strings['frequency7']}}">
+            <input id="low" type="checkbox">{{ strings['frequency4'] }}</label>
+            </small>
+            </div>
+
+
+
+        <!-- Выводим список результатов-->
+        <div class="row">
+        {% for model in list_value%}
+            <!-- Для каждой модели задаём столбец, где будет показана-->
+            <div class="col-md-5">
+            <!-- И жирным выводим название и даём ссылку на страницу моделей-->
+            <h4><strong><a href="{{ url }}{{lang}}/models#{{model}}">{{ strings[models[model]]}}</a></strong></h4>
+            <!-- Если модель что-то там с прогнозами, то "Слова нет в словаре модели; вектор восстановлен из составляющих его символов"-->
+            {% if model in inferred %}
+                <i>{{strings['similar32']}}</i>
+            {% endif %}
+        <!-- big увеличивает шрифт-->
+        <!-- <big> -->
+
+        <!-- Если не знаем слово, пишем "Модели неизвестно слово word" -->
+        <span style="font-size: larger;">
+        {% if list_value[model] == "Unknown!" %}
+            {{ strings['similar18'] }} "{{ word }}"
+        <!-- Иначе если нет результатов - "Нет подходящих результатов" -->
+        {% elif list_value[model] == "No results!"  %}
+            {{strings['similar23']}}
+        <!-- Иначе начинаем эти результаты выводить-->
+        {% else %}
+        </span>
+
+            <!-- Тег <ol> устанавливает нумерованный список. Каждый элемент списка должен начинаться с тега <li> -->
+            <ol style="font-size: larger;"> 
+            <!-- Проходим по всем результатам -->
+            {% for res in list_value[model] if res != "Incorrect tag!" %}
+
+                <li style='margin: 10px 0;' class="{{frequencies[model][res[0]][1]}}"> <!-- Класс зависит от частотности --> 
+
+                <!-- Каждое слово результата - ссылка на соответствующую страницу на сайте -->
+                <!-- title - При наведении курсора видим часть речи и чатсоту в корпусе -->
+                <!-- Выделяем цветом в зависимости от частоты -->
+                <a href="{{ url }}{{lang}}/{{ model }}/{{res[0]}}/"
+                title="{{strings['synraw15']}} {{ res[0].split('_')[-1] }}, {{strings['synraw14']}} {{ frequencies[model][res[0]][0]}}"
+                {% if frequencies[model][res[0]][1] == 'high'%} style="color: green;"
+                {% elif frequencies[model][res[0]][1] == 'low' %} style="color: red;" 
+                {% endif %}>
+
+                <!-- Заменяем склейку :: в результате на пробел-->
+                {{res[0].split('_')[0].replace('::', ' ')}}
+                <!-- Если результат приходит с частеречным тегом-->
+                {% if res[0].split('_')|length > 1 %}
+                <!-- показываем тег в виде нижнего индекса (sub)-->
+                <sub style="font-size:50%;">{{res[0].split('_')[-1]}}</sub>
+                {% endif %}</a> 
+
+                <!-- Выводим similarity с точностью до 2 знака -->
+                {{ "{:.2f} ".format(res[1]) }}
+
+                <!-- Если есть что-то про картинки, то подтягиваем картинку из википедии и ссылку на статью-->
+                <!-- И при наведении на картинку всплывает надпись вида "овца в Википедии"-->
+                {% if wordimages[res[0].split('_')[0]] %}
+                    <div class="avataricon">
+                    <a href="https://en.wikipedia.org/wiki/{{ res[0].split('_')[0] }}" target="_blank">
+                    <img src = "{{ wordimages[res[0].split('_')[0]] }}" alt = "{{res[0].split('_')[0]|capitalize }} {{strings['synraw11']}}"
+                     title = "{{ res[0].split('_')[0]|capitalize }} {{strings['synraw11']}}" width="30">
+                    </a>
+                    </div>
+
+                {% endif %}
+                </li>
+
+            {% endfor %}
+            <!-- Закончили проход по результатам-->
+            </ol>
+        {% endif %}
+        <!-- </big> -->
+        </div>
+        <!--  Закончили столбец для результатов одной модели -->
+        {% endfor %}
+        <!-- Закончили перебор моделей -->
+        </div>
+        <!-- Закончили поле для списка результатов-->
+
+
+        <hr> <!-- Рисует горизонтальную линию -->
+        <!-- То, что выводится внизу страницы после результатов -->
+        <ul>
+        <li><p><i>{{strings['base18']}}</i></p></li> <!-- Слова, выделенные красным, ....  -->
+        <li><p><i>{{strings['similar34']}}</i></p></li> <!-- "Для каждого слова показана его часть речи (если в модели они размечены)."  -->
+        </ul>
+    {% endif %}
+    <!-- Закончили с результатами -->
+
+    {% if error %}
+        <!-- Выводим "Некорректный тег","Некорректный запрос" или "Модели неизвестно слово" -->
+        <p> <span style = "font-size:larger;"><strong>
+        {% if 'Incorrect tag' in error %}
+            {{strings['similar22']}}
+        {% elif 'Incorrect query' in error %}
+            {{strings['similar21']}}
+        {% else %}
+            {{strings['similar18']}} {{ word }}
+        {% endif %}
+        </strong></span><p>
+    {% endif %}
+
+    </div> <!-- Закончили class="col-md-10" -->
+    </div> <!-- Закончили row -->
+{% endblock %}
+<!-- конец блока контента -->
