@@ -99,16 +99,15 @@
             <div class="checkbox">
             <p><small><em>{{strings['frequency1']}}</em></small></p>
             <small>
-                <label style="color: green;" title="{{strings['frequency5']}}">
-            <input id="high" type="checkbox" checked>{{ strings['frequency2']}}</label>
-                <label style="color: #337ab7;" title="{{strings['frequency6']}}">
+            <label style="color: green;" title="{{strings['frequency5']}}">
+            <input id="high" type="checkbox" checked>{{ strings['frequency2']}}
+            </label>
+            <label style="color: #337ab7;" title="{{strings['frequency6']}}">
             <input id="mid" type="checkbox" checked>{{ strings['frequency3'] }}</label>
-                <label style="color: red;" title="{{strings['frequency7']}}">
-            <input id="low" type="checkbox">{{ strings['frequency4'] }}</label>
+            <label style="color: red;" title="{{strings['frequency7']}}">
+            <input id="low" type="checkbox">{{ strings['frequency4'] }}</label>  
             </small>
             </div>
-
-
 
         <!-- Выводим список результатов-->
         <div class="row">
@@ -136,11 +135,17 @@
         </span>
 
             <!-- Тег <ol> устанавливает нумерованный список. Каждый элемент списка должен начинаться с тега <li> -->
-            <ol style="font-size: larger;"> 
+            <ol style="font-size: larger;" type="1"> 
             <!-- Проходим по всем результатам -->
             {% for res in list_value[model] if res != "Incorrect tag!" %}
-
-                <li style='margin: 10px 0;' class="{{frequencies[model][res[0]][1]}}"> <!-- Класс зависит от частотности --> 
+                
+                <!-- Класс зависит от частотности --> 
+                <li 
+                {% if frequencies[model][res[0]][1]== 'low' %} style="display: none;margin: 10px 0;"
+                {% else %} style="margin: 10px 0;"
+                {% endif %}
+                class="{{frequencies[model][res[0]][1]}}"
+                > 
 
                 <!-- Каждое слово результата - ссылка на соответствующую страницу на сайте -->
                 <!-- title - При наведении курсора видим часть речи и чатсоту в корпусе -->
