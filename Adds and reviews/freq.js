@@ -1,11 +1,17 @@
 $(document).ready(function(){
   $("#high").click(function(){
-    $("li.high").fadeToggle('slow');
+    if ($(this).is(':checked')){
+      $("li.high").fadeIn('slow');
+    } else {$("li.high").fadeOut('slow');}
   });
   $("#mid").click(function(){
-	$("li.mid").fadeToggle('slow');
+    if ($(this).is(':checked')){
+      $("li.mid").fadeIn('slow');
+    } else {$("li.mid").fadeOut('slow');}
   });
   $("#low").click(function(){
-	$("li.low").fadeToggle('slow');
+    if ($(this).is(':checked')){
+      $("li.low").fadeIn('slow');
+    } else {$("li.low").fadeOut('slow');}
   });
 });
