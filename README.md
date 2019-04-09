@@ -4,7 +4,9 @@ Working on visualization for rusvectores.org
 
 ### Current teamlead: 
 
-**Nastia**
+**Alexey**
+
+Nastia
 
 Nadia
 
