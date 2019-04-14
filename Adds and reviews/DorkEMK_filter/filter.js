@@ -47,7 +47,7 @@ function formResultsUsingFilterList(resultArray){
     let currentModel=$(this).attr("id");
     let counter = 0;
     $("#"+currentModel).children("li").each(function(){
-      if ($.inArray($(this).attr("id"), resultArray[currentModel]) > -1 && counter <10){
+      if ($.inArray($(this).data("word"), resultArray[currentModel]) > -1 && counter <10){
         $(this).fadeIn('slow');
         counter ++;
       } else {
