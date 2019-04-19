@@ -16,4 +16,4 @@ else:
     model = gensim.models.KeyedVectors.load(m)
     
 model.init_sims(replace=True)
-visualize_write("file2.html", model, "буква_NOUN")    
+visualize_dir("E:\\", model, "буква_NOUN", 1, 10, 1)
