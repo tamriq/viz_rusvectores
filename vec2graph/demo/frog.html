@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="frog">
+		<title>frog</title>
+		<script src="https://d3js.org/d3.v3.min.js"></script>
+		<script>(function(){
+'use strict';
+document.addEventListener("DOMContentLoaded", function(e) {
+  var width = 100, height = 100;
+  var maincolor = "#F4B400";
+  var pages = ['frog'];
+  var topn = 10;
+  var svg = d3.select("body").append("svg");
+  var linkstrokewidth = 1;
+  var force = d3.layout.force().gravity(.05).distance(100).charge(-100);
+  var datanodes = [], datalinks = [], i = 1;
+  var delta = 0;
+  var radius = 10;
+  function buildGraph(inlinks, innodes) {
+    d3.selectAll(".link").remove();
+    d3.selectAll(".node").remove();
+    d3.selectAll("circle").remove();
+    var links = inlinks;
+    force.nodes(innodes).links(inlinks).linkDistance(function(d) {
+      var dv = d.value * 100;
+      var df = Math.log(dv);
+      var koef = isFinite(df) ? df : 1;
+      return dv * koef + radius;
+    }).start();
+    var linksel = svg.selectAll(".link").data(inlinks);
+    var link = linksel.enter().append("line").attr("stroke", "#aaa").style("stroke-width", linkstrokewidth || 1);
+    var nodesel = svg.selectAll(".node").data(innodes);
+    var node = nodesel.enter().append("g").call(force.drag);
+    node.append("circle").attr("fill", function(d) {
+      return d.color;
+    }).style("stroke", "black").style("stroke-width", function(d) {
+      return d.page ? 3 : 0;
+    }).attr("r", function(d) {
+      return d.color == maincolor ? radius * 1.5 : radius;
+    }).on("click", function(d) {
+      if (d.page) {
+        window.open(d.name + ".html");
+      }
+    });
+    node.append("text").text(function(d) {
+      return d.name;
+    }).on("click", function(d) {
+      if (d.page) {
+        window.open(d.name + ".html");
+      }
+    }).attr("stroke", "#333").attr("dx", 12).attr("dy", ".35em").style("cursor", "default");
+    nodesel.exit().remove();
+    force.on("tick", function() {
+      link.attr("x1", function(d) {
+        return d.source.x;
+      }).attr("y1", function(d) {
+        return d.source.y;
+      }).attr("x2", function(d) {
+        return d.target.x;
+      }).attr("y2", function(d) {
+        return d.target.y;
+      });
+      node.attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      });
+    });
+  }
+  width = window.innerWidth, height = window.innerHeight;
+  svg.attr("width", width).attr("height", height);
+  force.size([width, height]);
+  var data = [{'source': 'frog', 'target': 'frog', 'value': 1}, {'source': 'frog', 'target': 'toad', 'value': 0.6331218481063843}, {'source': 'frog', 'target': 'frogs', 'value': 0.6233975291252136}, {'source': 'frog', 'target': 'snake', 'value': 0.48968827724456787}, {'source': 'frog', 'target': 'monkey', 'value': 0.4887806177139282}, {'source': 'frog', 'target': 'toads', 'value': 0.4861147105693817}, {'source': 'frog', 'target': 'squirrel', 'value': 0.47789764404296875}, {'source': 'frog', 'target': 'species', 'value': 0.4764745831489563}, {'source': 'frog', 'target': 'rodent', 'value': 0.45831969380378723}, {'source': 'frog', 'target': 'parrot', 'value': 0.4563598930835724}, {'source': 'frog', 'target': 'spider', 'value': 0.4531068801879883}, {'source': 'toad', 'target': 'frogs', 'value': 0.44065803}, {'source': 'toad', 'target': 'snake', 'value': 0.43335322}, {'source': 'toad', 'target': 'monkey', 'value': 0.38961792}, {'source': 'toad', 'target': 'toads', 'value': 0.6712821}, {'source': 'toad', 'target': 'squirrel', 'value': 0.35301784}, {'source': 'toad', 'target': 'species', 'value': 0.3587916}, {'source': 'toad', 'target': 'rodent', 'value': 0.38827002}, {'source': 'toad', 'target': 'parrot', 'value': 0.3032511}, {'source': 'toad', 'target': 'spider', 'value': 0.31572}, {'source': 'frogs', 'target': 'snake', 'value': 0.42309222}, {'source': 'frogs', 'target': 'monkey', 'value': 0.26754737}, {'source': 'frogs', 'target': 'toads', 'value': 0.68942934}, {'source': 'frogs', 'target': 'squirrel', 'value': 0.27471414}, {'source': 'frogs', 'target': 'species', 'value': 0.43884075}, {'source': 'frogs', 'target': 'rodent', 'value': 0.38084486}, {'source': 'frogs', 'target': 'parrot', 'value': 0.29676306}, {'source': 'frogs', 'target': 'spider', 'value': 0.3047502}, {'source': 'snake', 'target': 'monkey', 'value': 0.46766207}, {'source': 'snake', 'target': 'toads', 'value': 0.3829473}, {'source': 'snake', 'target': 'squirrel', 'value': 0.38023922}, {'source': 'snake', 'target': 'species', 'value': 0.39747998}, {'source': 'snake', 'target': 'rodent', 'value': 0.35850906}, {'source': 'snake', 'target': 'parrot', 'value': 0.33127284}, {'source': 'snake', 'target': 'spider', 'value': 0.4845569}, {'source': 'monkey', 'target': 'toads', 'value': 0.20593415}, {'source': 'monkey', 'target': 'squirrel', 'value': 0.56587964}, {'source': 'monkey', 'target': 'species', 'value': 0.30967808}, {'source': 'monkey', 'target': 'rodent', 'value': 0.36221373}, {'source': 'monkey', 'target': 'parrot', 'value': 0.43269566}, {'source': 'monkey', 'target': 'spider', 'value': 0.50606287}, {'source': 'toads', 'target': 'squirrel', 'value': 0.25395915}, {'source': 'toads', 'target': 'species', 'value': 0.34917673}, {'source': 'toads', 'target': 'rodent', 'value': 0.34577173}, {'source': 'toads', 'target': 'parrot', 'value': 0.24956405}, {'source': 'toads', 'target': 'spider', 'value': 0.2642743}, {'source': 'squirrel', 'target': 'species', 'value': 0.31712618}, {'source': 'squirrel', 'target': 'rodent', 'value': 0.49715635}, {'source': 'squirrel', 'target': 'parrot', 'value': 0.43364725}, {'source': 'squirrel', 'target': 'spider', 'value': 0.384493}, {'source': 'species', 'target': 'rodent', 'value': 0.4415617}, {'source': 'species', 'target': 'parrot', 'value': 0.3949794}, {'source': 'species', 'target': 'spider', 'value': 0.37793416}, {'source': 'rodent', 'target': 'parrot', 'value': 0.36258683}, {'source': 'rodent', 'target': 'spider', 'value': 0.39661196}, {'source': 'parrot', 'target': 'spider', 'value': 0.30159938}];
+  var order = {};
+  order[data[0]["source"]] = 0;
+  datanodes.push({"name":data[0]["source"], color:maincolor});
+  for (var k, k = 1; k < data.length; k++) {
+    var dif = 1 - data[k]["value"];
+    if (delta && delta > dif || !delta) {
+      delta = dif;
+    }
+    var key = data[k]["target"];
+    var src = 0;
+    var tg = k;
+    if (k > topn) {
+      src = order[data[k]["source"]];
+      tg = order[data[k]["target"]];
+    } else {
+      datanodes.push({"name":data[k]["target"], color:"#DB4437", page:pages.indexOf(data[k]["target"]) > -1});
+      order[key] = k;
+    }
+    datalinks.push({"source":src, "target":tg, "value":dif, "key":key});
+  }
+  buildGraph(datalinks, datanodes);
+});
+
+}).call(this)</script>
+	</head>
+	<body>
+	</body>
+</html>
