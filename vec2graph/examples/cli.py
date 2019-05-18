@@ -111,12 +111,13 @@ if not args.model:
 
 if args.model.endswith(".zip"):
     with zipfile.ZipFile(args.model, "r") as archive:
-        args.model = archive.open("model.bin")
-        binaryMode = True
+        stream = archive.open("model.bin")
+        model = gensim.models.KeyedVectors.load_word2vec_format(stream, binary=True,
+                                                                unicode_errors='replace')
 else:
     binaryMode = args.model.endswith(".bin.gz")
-
-model = gensim.models.KeyedVectors.load_word2vec_format(args.model, binary=binaryMode)
+    model = gensim.models.KeyedVectors.load_word2vec_format(args.model, binary=binaryMode,
+                                                            unicode_errors='replace')
 
 model.init_sims(replace=True)
 token = args.token if args.token else random.choice(model.index2entity)
