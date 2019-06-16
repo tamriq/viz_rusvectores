@@ -3,24 +3,20 @@ import os
 import json
 import requests
 from requests.exceptions import HTTPError
+from smart_open import smart_open
+from shutil import copyfile
 
-path = os.path.dirname(os.path.abspath(__file__))
-
-html = open(path + '/genviz.html', 'r').read()
 
 def get_data(model, word, depth=0, topn=10):
     datum = {}
-
     if not word:
-        raise ValueError("empty string")
-    if "gensim" in sys.modules:
-        if word not in model.vocab:
-            print(word + " is not in model")
-            return datum
+        raise ValueError("Empty string!")
+    if word not in model.vocab:
+        print(word + " is not in model", file=sys.stderr)
+        return datum
     res = get_most_similar(model, word, topn)
     datum[word] = res[0]
     get_neighbors(model, datum, res[1], depth, topn)
-
     return datum
 
 
@@ -28,18 +24,17 @@ def get_neighbors(model, datum, stack, depth, topn):
     if depth > 0:
         depth -= 1
         for neighbor in stack:
-
             res = get_most_similar(model, neighbor, topn)
             datum[neighbor] = res[0]
             get_neighbors(model, datum, res[1], depth, topn)
     return
 
 
-def get_most_similar(model, word, topn=10, function="similar_by_word"):
+def get_most_similar(model, word, topn=10, sim_func="similar_by_word"):
     arr = [{"source": word, "target": word, "value": 1}]
     neighbors = []
 
-    mostsim = getattr(model, function)(word, topn=topn)
+    mostsim = getattr(model, sim_func)(word, topn=topn)
 
     for item in mostsim:
         arr.append({"source": word, "target": item[0], "value": item[1]})
@@ -52,32 +47,36 @@ def get_most_similar(model, word, topn=10, function="similar_by_word"):
     ]
     for pair in pairs:
         arr.append(
-            {"source": pair[0], "target": pair[1], "value": model.similarity(*pair)}
+            {"source": pair[0], "target": pair[1], "value": float(model.similarity(*pair))}
         )
 
     return [arr, neighbors]
 
 
 def render(
-    word, data, topn=10, threshold=0, interlinks=[], edge=1, sep=False, d3path=""
+        word, data, interlinks, topn=10, threshold=0, edge=1, sep=False, d3path=""
 ):
+    html = smart_open('genviz.html', 'r').read()
     return (
         html.replace("d3pathplaceholder", d3path)
-        .replace("wordplaceholder", word)
-        .replace("splithyphen", str(sep).lower())
-        .replace("dataplaceholder", json.dumps(data).replace("\'","\\u0027"))
-        .replace("topn", str(topn))
-        .replace("thresholdplaceholder", str(threshold))
-        .replace("linksplaceholder", str(interlinks))
-        .replace("linkstrokewidth", str(edge))
+            .replace("wordplaceholder", word)
+            .replace("splithyphen", str(sep).lower())
+            .replace("dataplaceholder", json.dumps(data).replace("\'", "\\u0027"))
+            .replace("topn", str(topn))
+            .replace("thresholdplaceholder", str(threshold))
+            .replace("linksplaceholder", str(interlinks))
+            .replace("linkstrokewidth", str(edge))
     )
 
 
 def vec2graph(
-    path, model, words, depth=0, topn=10, threshold=0, edge=1, sep=False, library="web"
+        path, model, words, depth=0, topn=10, threshold=0, edge=1, sep=False, library="web"
 ):
     d3webpath = "https://d3js.org/d3.v3.min.js"
-    limit = threshold if threshold < 1 else threshold / 100
+    if threshold < 1:
+        limit = threshold
+    else:
+        limit = threshold / 100
     data = {}
     if isinstance(words, list):
         for word in words:
@@ -85,13 +84,12 @@ def vec2graph(
     elif isinstance(words, str):
         data = get_data(model, words, depth=depth, topn=topn)
     else:
-        raise ValueError("wrong type")
+        raise ValueError("Wrong type!")
 
     pages = list(data.keys())
 
-    if library == "web":
-        d3path = d3webpath
-    elif library == "local":
+    d3path = d3webpath
+    if library == "local":
         d3path = "d3.v3.min.js"
         fullpath = os.path.join(path, d3path)
 
@@ -100,29 +98,30 @@ def vec2graph(
                 response = requests.get(d3webpath)
                 response.raise_for_status()
             except HTTPError as err:
-                print(err)
+                print(err, file=sys.stderr)
             except Exception as err:
-                print(err)
+                print(err, file=sys.stderr)
             else:
                 response.encoding = "utf-8"
                 with open(fullpath, "w", encoding="utf-8") as d3:
                     d3.write(response.text)
 
+    copyfile('genviz.js', os.path.join(path, 'genviz.js'))
     for page in pages:
         fname = "".join([x if x.isalnum() else "_" for x in page])
         filepath = os.path.join(path, fname + ".html")
-        with open(filepath, "w", encoding="utf-8") as f:
+        with smart_open(filepath, "w") as f:
             f.write(
                 render(
                     page,
                     data[page],
+                    pages,
                     topn=topn,
                     threshold=limit,
-                    interlinks=pages,
                     edge=edge,
                     sep=sep,
                     d3path=d3path,
                 )
             )
 
-    pass
+    return pages
