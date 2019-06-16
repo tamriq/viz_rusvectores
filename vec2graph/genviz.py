@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 import requests
 from requests.exceptions import HTTPError
 
@@ -64,7 +65,7 @@ def render(
         html.replace("d3pathplaceholder", d3path)
         .replace("wordplaceholder", word)
         .replace("splithyphen", str(sep).lower())
-        .replace("dataplaceholder", str(data))
+        .replace("dataplaceholder", json.dumps(data).replace("\'","\\u0027"))
         .replace("topn", str(topn))
         .replace("thresholdplaceholder", str(threshold))
         .replace("linksplaceholder", str(interlinks))
