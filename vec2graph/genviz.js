@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
   };
 
   var splithyphen = getMeta("split-hyphen");
-  var data = JSON.parse(getMeta("data").replace(/\'/g, '"'));
+  var data = JSON.parse(getMeta("data"));
   var topn = getMeta("number-of-neighbours");
   var linkstrokewidth = getMeta("link-stroke-width");
   var pages = getMeta("pages");
