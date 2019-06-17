@@ -64,7 +64,7 @@ def render(
             .replace("dataplaceholder", json.dumps(data).replace("\'", "\\u0027"))
             .replace("topn", str(topn))
             .replace("thresholdplaceholder", str(threshold))
-            .replace("linksplaceholder", str(interlinks))
+            .replace("linksplaceholder", json.dumps(interlinks).replace("\'", "\\u0027"))
             .replace("linkstrokewidth", str(edge))
     )
 
@@ -108,7 +108,7 @@ def vec2graph(
 
     copyfile('genviz.js', os.path.join(path, 'genviz.js'))
     for page in pages:
-        fname = "".join([x if x.isalnum() else "_" for x in page])
+        fname = "".join([x for x in page])
         filepath = os.path.join(path, fname + ".html")
         with smart_open(filepath, "w") as f:
             f.write(

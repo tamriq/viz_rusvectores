@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
   var data = JSON.parse(getMeta("data"));
   var topn = getMeta("number-of-neighbours");
   var linkstrokewidth = getMeta("link-stroke-width");
-  var pages = getMeta("pages");
+  var pages = JSON.parse(getMeta("pages"));
   var threshold = getMeta("threshold");
 
 
